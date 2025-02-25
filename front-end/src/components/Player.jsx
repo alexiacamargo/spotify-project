@@ -65,10 +65,21 @@ const Player = ({
 
   useEffect(() => {
     if (audioPlayer.current) {
-      audioPlayer.current.play(); 
-      setIsPlaying(true); 
+      audioPlayer.current.play();
+      setIsPlaying(true);
     }
-  }, [audio]); 
+
+    const handleEnded = () => {
+      goToNextSong();
+    };
+
+    const currentAudioPlayer = audioPlayer.current;
+    currentAudioPlayer.addEventListener("ended", handleEnded);
+
+    return () => {
+      currentAudioPlayer.removeEventListener("ended", handleEnded);
+    };
+  }, [audio, goToNextSong]);
 
   return (
     <div className="player">
@@ -76,7 +87,7 @@ const Player = ({
         <FontAwesomeIcon
           className="player__icon"
           icon={faBackwardStep}
-          onClick={goToPreviousSong} 
+          onClick={goToPreviousSong}
         />
 
         <FontAwesomeIcon
@@ -88,7 +99,7 @@ const Player = ({
         <FontAwesomeIcon
           className="player__icon"
           icon={faForwardStep}
-          onClick={goToNextSong} 
+          onClick={goToNextSong}
         />
       </div>
 
